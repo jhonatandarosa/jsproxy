@@ -22,15 +22,14 @@ public final class JSProxyBinder {
 
         long expireTime = 10000;// 10 seconds
         if (jsExecutor.executeScript("return window." + waitingVar) == null) {
-            StringBuilder script = new StringBuilder();
-            script.append("var fileref=document.createElement('script');");
-            script.append("fileref.setAttribute('type','text/javascript');");
-            script.append("fileref.setAttribute('src', arguments[0]);");
-            script.append("document.getElementsByTagName('head')[0].appendChild(fileref);");
+            String script = "var fileref=document.createElement('script');";
+            script += "fileref.setAttribute('type','text/javascript');";
+            script += "fileref.setAttribute('src', arguments[0]);";
+            script += "document.getElementsByTagName('head')[0].appendChild(fileref);";
 
             long start = System.currentTimeMillis();
             String fullPath = baseUrl + "/" + scriptPath;
-            jsExecutor.executeScript(script.toString(), fullPath + "?v=" + start);
+            jsExecutor.executeScript(script, fullPath + "?v=" + start);
 
             while (jsExecutor.executeScript("return window." + waitingVar) == null) {
                 long now = System.currentTimeMillis();
@@ -101,6 +100,7 @@ public final class JSProxyBinder {
         proxies.clear();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T unbind(Class<T> clazz, WebDriver driver) {
         String key = getKey(clazz, driver);
         return (T)proxies.remove(key);
