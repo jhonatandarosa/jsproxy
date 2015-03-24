@@ -80,16 +80,6 @@ class JSProxyInvocationHandler<T> implements InvocationHandler {
             return null;
         }
 
-        // FIXME: devido a bug no selenium
-        // não é possível retornar número decimal
-        // então está sendo forçado o retorno de string
-        // para depois fazer o tratamento adequado
-        // FIXME: Quando for resolvido o bug no selenium
-        // corrigir este método
-        if (double.class.isAssignableFrom(returnType) && result instanceof String) {
-            return Double.parseDouble(result.toString());
-        }
-
         if (String.class.isAssignableFrom(returnType) || ClassUtils.isPrimitiveOrWrapper(returnType) || WebElement.class.isAssignableFrom(returnType)) {
             return result;
         }
